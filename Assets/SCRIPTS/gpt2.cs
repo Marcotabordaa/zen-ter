@@ -8,20 +8,40 @@ public class gpt2 : MonoBehaviour
 
     private bool isMoving;
 
+    public LayerMask solidObjectsLayer;
+
+    private Animator animator;
+    private Vector2 moveInput;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            animator.SetTrigger("Attack");
+        }
         // Solo permitir el movimiento si el personaje no está ya en movimiento
         if (!isMoving)
         {
             // Obtener las entradas de movimiento del jugador
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput = Input.GetAxisRaw("Vertical");
+            moveInput = new Vector2(horizontalInput, verticalInput).normalized;
+            animator.SetFloat("Horizontal", horizontalInput);
+            animator.SetFloat("Vertical", verticalInput);
+            animator.SetFloat("Speed", moveInput.sqrMagnitude);
 
             // Si el jugador está moviéndose
             if (horizontalInput != 0 || verticalInput != 0)
             {
                 Vector3 inputDirection = new Vector3(horizontalInput, verticalInput, 0f);
-                StartCoroutine(Move(inputDirection));
+
+                if(IsWalkable(inputDirection))
+                   StartCoroutine(Move(inputDirection));
             }
         }
     }
@@ -48,6 +68,22 @@ public class gpt2 : MonoBehaviour
 
         // Indicar que el personaje ha terminado de moverse
         isMoving = false;
+    }
+
+    private bool IsWalkable(Vector3 inputDirection)
+    {
+        // Convertir la posición actual del personaje a un Vector2
+        Vector2 currentPosition = new Vector2(transform.position.x, transform.position.y);
+
+        // Convertir inputDirection a un Vector2
+        Vector2 inputDir2D = new Vector2(inputDirection.x, inputDirection.y);
+
+        // Realizar un OverlapCircle para verificar si hay algún objeto sólido en la dirección del input
+        if (Physics2D.OverlapCircle(currentPosition + inputDir2D, 0.2f, solidObjectsLayer) != null)
+        {
+            return false;
+        }
+        return true;
     }
 
 }

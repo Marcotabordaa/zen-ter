@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - SolidObjects
   - 
   - 
   - 
@@ -50,9 +50,12 @@ TagManager:
   - name: OBJECTS
     uniqueID: 2298280517
     locked: 0
-  - name: PLAYER/ENEMIES
-    uniqueID: 1015774625
-    locked: 0
   - name: OVERWALLS
     uniqueID: 3941362705
+    locked: 0
+  - name: foreground
+    uniqueID: 1141519587
+    locked: 0
+  - name: PLAYER/ENEMIES
+    uniqueID: 1015774625
     locked: 0
